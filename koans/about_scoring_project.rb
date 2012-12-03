@@ -29,8 +29,34 @@ require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 #
 # Your goal is to write the score method.
 
+def counts_from_dice(dice)
+  dice.inject({}) do |hash, value|
+    hash[value] ||= 0
+    hash[value] += 1
+    hash
+  end
+end
+
 def score(dice)
-  # You need to write this method
+  counts_from_dice(dice).inject(0) do |sum, (number, count)|
+    if count >= 3
+      sum += (number == 1 ? 1000 : number * 100)
+      extras_count = count - 3
+    else
+      extras_count = count
+    end
+
+    case number
+    when 1
+      sum += 100*extras_count
+    when 5
+      sum += 50*extras_count
+    else
+      sum += 0
+    end
+
+    sum
+  end
 end
 
 class AboutScoringProject < EdgeCase::Koan
